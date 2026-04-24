@@ -5,18 +5,17 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function BuyerLayout({ children }: { children: React.ReactNode }) {
-  const { user, isLoading, setLoading } = useUserStore();
+  const { user, isHydrated } = useUserStore();
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoading) setLoading(false);
-    if ((!user || user.type !== "BUYER") && !isLoading) {
+    if (isHydrated && (!user || user.type !== "BUYER")) {
       router.replace("/products");
     }
-  }, [user, router, isLoading, pathname]);
+  }, [user, router, isHydrated, pathname]);
 
-  if (!user || user.type !== "BUYER") {
+  if (!isHydrated || !user || user.type !== "BUYER") {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <div>로딩 중...</div>

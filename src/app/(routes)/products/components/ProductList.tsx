@@ -3,6 +3,7 @@
 import PageButton from "@/components/button/PageButton";
 import { getProducts } from "@/lib/api/products";
 import { useSearchOptionStore } from "@/stores/searchOptionStore";
+import { useUserStore } from "@/stores/userStore";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -12,9 +13,10 @@ import ProductSort from "./ProductSort";
 const ITEMS_PER_PAGE = 16;
 
 const ProductList = () => {
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
-  const [sorted, setSorted] = useState("highRating"); // 정렬 옵션
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sorted, setSorted] = useState("highRating");
   const { searchOption } = useSearchOptionStore();
+  const isHydrated = useUserStore((s) => s.isHydrated);
   const params = useSearchParams();
   const search = params.get("search");
 
@@ -31,6 +33,7 @@ const ProductList = () => {
         search: searchToUse,
       }),
     placeholderData: keepPreviousData,
+    enabled: isHydrated,
   });
 
   const onSorted = (sort: string) => {

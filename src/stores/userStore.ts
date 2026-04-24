@@ -5,9 +5,8 @@ import { persist } from "zustand/middleware";
 interface UserState {
   user: User | null;
   accessToken: string | null;
-  isLoading: boolean;
+  isHydrated: boolean;
   setUser: (user: User) => void;
-  setLoading: (state: boolean) => void;
   setAccessToken: (token: string) => void;
   logout: () => void;
 }
@@ -17,14 +16,17 @@ export const useUserStore = create<UserState>()(
     (set) => ({
       user: null,
       accessToken: null,
-      isLoading: true,
+      isHydrated: false,
       setUser: (user) => set({ user }),
-      setLoading: (state) => set({ isLoading: state }),
       setAccessToken: (token) => set({ accessToken: token }),
       logout: () => set({ user: null, accessToken: null }),
     }),
     {
-      name: "codiit-user-storage", // 로컬스토리지 key
+      name: "codiit-user-storage",
+      partialize: (state) => ({ user: state.user, accessToken: state.accessToken }),
+      onRehydrateStorage: () => () => {
+        useUserStore.setState({ isHydrated: true });
+      },
     }
   )
 );

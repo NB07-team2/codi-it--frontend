@@ -7,17 +7,15 @@ import { useEffect } from "react";
 export default function SellerLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { accessToken, user, isLoading, setLoading } = useUserStore();
+  const { accessToken, user, isHydrated } = useUserStore();
 
   useEffect(() => {
-    if (user && isLoading) setLoading(false);
-    if ((!accessToken || user?.type !== "SELLER") && !isLoading) {
-      console.log(accessToken);
+    if (isHydrated && (!accessToken || user?.type !== "SELLER")) {
       router.replace("/products");
     }
-  }, [accessToken, user, pathname, router, isLoading]);
+  }, [accessToken, user, pathname, router, isHydrated]);
 
-  if (isLoading) return <></>;
+  if (!isHydrated) return <></>;
 
   return <>{children}</>;
 }

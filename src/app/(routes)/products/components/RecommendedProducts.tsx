@@ -1,16 +1,20 @@
 "use client";
 
 import { getProducts } from "@/lib/api/products";
+import { useUserStore } from "@/stores/userStore";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import ProductItem from "./ProductItem";
 
 const ITEMS_PER_PAGE = 4;
 
 const RecommendedProducts = () => {
+  const isHydrated = useUserStore((s) => s.isHydrated);
+
   const { data } = useQuery({
     queryKey: ["RecommendedProducts"],
     queryFn: () => getProducts({ page: 1, pageSize: ITEMS_PER_PAGE, sort: "salesRanking" }),
     placeholderData: keepPreviousData,
+    enabled: isHydrated,
   });
 
   return (
