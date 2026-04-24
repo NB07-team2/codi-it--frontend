@@ -19,12 +19,11 @@ export default function LoginPage() {
   const loginMutation = useMutation({
     mutationFn: postLogin,
     onSuccess: (data) => {
-      console.log(data);
       setUser(data.user);
       setAccessToken(data.accessToken);
 
       toaster("info", "로그인에 성공했습니다.");
-      // router.push("/products");
+      router.push("/products");
     },
     onError: (error: unknown) => {
       let message = "";
