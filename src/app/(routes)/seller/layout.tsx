@@ -1,5 +1,6 @@
 "use client";
 
+import { useStoreHydrated } from "@/hooks/useStoreHydrated";
 import { useUserStore } from "@/stores/userStore";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -7,7 +8,8 @@ import { useEffect } from "react";
 export default function SellerLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { accessToken, user, isHydrated } = useUserStore();
+  const { accessToken, user } = useUserStore();
+  const isHydrated = useStoreHydrated();
 
   useEffect(() => {
     if (isHydrated && (!accessToken || user?.type !== "SELLER")) {

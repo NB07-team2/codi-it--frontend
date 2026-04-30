@@ -1,11 +1,13 @@
 "use client";
 
+import { useStoreHydrated } from "@/hooks/useStoreHydrated";
 import { useUserStore } from "@/stores/userStore";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function BuyerLayout({ children }: { children: React.ReactNode }) {
-  const { user, isHydrated } = useUserStore();
+  const { user } = useUserStore();
+  const isHydrated = useStoreHydrated();
   const pathname = usePathname();
   const router = useRouter();
 
